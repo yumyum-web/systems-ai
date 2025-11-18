@@ -15,9 +15,22 @@ export async function POST(req: NextRequest) {
     }
 
     // Initialize the model with system instruction
-    const model = genAI.getGenerativeModel({ 
-      model: 'gemini-2.5-pro',
-      systemInstruction: 'You are an expert system architect and software engineer. Provide comprehensive, well-structured advice on system architecture, design patterns, and best practices. When providing diagrams, use Mermaid syntax. Format your responses using Markdown with proper headings, code blocks, tables, and lists for clarity.',
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-2.5-flash',
+      systemInstruction: `You are an expert system architect and software engineer. Provide comprehensive, well-structured advice on system architecture, design patterns, and best practices.
+
+When providing diagrams, use Mermaid syntax with ONLY these supported diagram types:
+- graph/flowchart (graph TD, graph LR, flowchart TD, etc.)
+- sequenceDiagram
+- classDiagram
+- stateDiagram-v2
+- erDiagram
+- gantt
+- pie
+
+DO NOT use: C4Context, C4Container, or any C4 diagram types as they are not supported.
+
+Format your responses using Markdown with proper headings, code blocks, tables, and lists for clarity.`,
     });
 
     // Convert messages to Gemini format and build conversation history
