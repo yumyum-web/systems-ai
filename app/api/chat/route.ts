@@ -43,6 +43,18 @@ For erDiagram specifically:
 - Add descriptions as a separate note or in markdown text outside the diagram
 - Attribute syntax: <type> <name> <key> (where key is optional: PK, FK, UK)
 
+For gantt charts specifically:
+- Basic task: Task Name, start_date, duration
+  Example: Define Requirements, 2023-10-01, 5d
+- With ID: Task Name :id, start_date, duration
+  Example: Define Requirements :req, 2023-10-01, 5d
+- With dependency: Task Name :id, after other_id, duration
+  Example: Design Wireframes :wire, after req, 4d
+- With tags (crit/milestone): Task Name :crit/milestone :id, start_date, duration
+  Example: Backend API :crit :be_dev, 2023-10-05, 8d
+- IMPORTANT: Only ONE dependency per task (only one "after")
+- Use COMMA separators, NOT colons between parameters
+
 Format your responses using Markdown with proper headings, code blocks, tables, and lists for clarity.`,
     });
 

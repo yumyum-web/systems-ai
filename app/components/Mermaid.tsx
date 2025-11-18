@@ -67,6 +67,40 @@ export default function Mermaid({ chart }: MermaidProps) {
         );
       }
 
+      // Fix 3: Fix Gantt chart task syntax
+      if (fixedCode.includes('gantt')) {
+        // Fix colon before date: TaskID: Task Name : date -> TaskID: Task Name, date
+        fixedCode = fixedCode.replace(
+          /^(\s+)([A-Za-z_]\w*):\s*([^:]+)\s*:\s*(.+)$/gm,
+          '$1$2: $3, $4'
+        );
+        
+        // Fix multiple "after" dependencies - only keep the first one
+        // Pattern: after dep1, after dep2 -> after dep1
+        fixedCode = fixedCode.replace(
+          /(after\s+\w+),\s*after\s+\w+/g,
+          '$1'
+        );
+        
+        // Move tags (crit, milestone, done, active) to end after duration
+        // Pattern: :id, date, duration, tag -> :id, date, duration
+        // Then add tag support at the end
+        fixedCode = fixedCode.replace(
+          /^(\s+)([^:]+):\s*(\w+),\s*([^,]+),\s*(\d+d),\s*(crit|milestone|done|active)(.*)$/gm,
+          (match, indent, name, id, start, duration, tag, rest) => {
+            return `${indent}${name}:${tag}, ${id}, ${start}, ${duration}${rest}`;
+          }
+        );
+        
+        // Handle tags without explicit ID
+        fixedCode = fixedCode.replace(
+          /^(\s+)([^:]+):\s*([^,]+),\s*(\d+d),\s*(crit|milestone|done|active)(.*)$/gm,
+          (match, indent, name, start, duration, tag, rest) => {
+            return `${indent}${name}:${tag}, ${start}, ${duration}${rest}`;
+          }
+        );
+      }
+
       return fixedCode;
     };
 
