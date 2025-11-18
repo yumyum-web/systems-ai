@@ -21,6 +21,10 @@ import {
 import SendIcon from '@mui/icons-material/Send';
 import MenuIcon from '@mui/icons-material/Menu';
 import AddIcon from '@mui/icons-material/Add';
+import ChatIcon from '@mui/icons-material/Chat';
+import PersonIcon from '@mui/icons-material/Person';
+import SmartToyIcon from '@mui/icons-material/SmartToy';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import ReactMarkdown from 'react-markdown';
@@ -31,10 +35,29 @@ const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#90caf9',
+      main: '#4fc3f7',
     },
     secondary: {
-      main: '#f48fb1',
+      main: '#ba68c8',
+    },
+    background: {
+      default: '#0a0e27',
+      paper: '#131a35',
+    },
+  },
+  typography: {
+    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+  },
+  shape: {
+    borderRadius: 12,
+  },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundImage: 'none',
+        },
+      },
     },
   },
 });
@@ -165,41 +188,70 @@ export default function Home() {
   };
 
   const drawer = (
-    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <Toolbar>
-        <Typography variant="h6" noWrap component="div">
+    <Box 
+      sx={{ 
+        height: '100%', 
+        display: 'flex', 
+        flexDirection: 'column',
+        background: 'linear-gradient(180deg, #0f1629 0%, #0a0e27 100%)',
+      }}
+    >
+      <Toolbar sx={{ justifyContent: 'center',gap: 1.5, py: 4 }}>
+        <AccountTreeIcon sx={{ fontSize: 32, color: 'primary.main' }} />
+        <Typography variant="h5" noWrap component="div" sx={{ fontWeight: 600, letterSpacing: '-0.5px' }}>
           Systems AI
         </Typography>
       </Toolbar>
-      <Divider />
+      <Divider sx={{ opacity: 0.1 }} />
       <Box sx={{ p: 2 }}>
         <IconButton
           onClick={handleNewChat}
           sx={{
-            border: '1px solid',
-            borderColor: 'divider',
+            border: '2px solid',
+            borderColor: 'primary.main',
             borderRadius: 2,
             justifyContent: 'flex-start',
-            px: 2,
-            py: 1,
+            px: 2.5,
+            py: 1.5,
             width: '100%',
+            bgcolor: 'primary.main',
+            color: 'background.paper',
+            '&:hover': {
+              bgcolor: 'primary.dark',
+              transform: 'translateY(-1px)',
+              boxShadow: '0 4px 12px rgba(79, 195, 247, 0.3)',
+            },
+            transition: 'all 0.2s',
           }}
         >
-          <AddIcon sx={{ mr: 1 }} />
-          <Typography>New Chat</Typography>
+          <AddIcon sx={{ mr: 1.5, fontSize: 22 }} />
+          <Typography fontWeight={600}>New Chat</Typography>
         </IconButton>
       </Box>
-      <Divider />
-      <List sx={{ flexGrow: 1, overflow: 'auto' }}>
+      <Divider sx={{ opacity: 0.1 }} />
+      <List sx={{ flexGrow: 1, overflow: 'auto', px: 1 }}>
         {chats.map((chat) => (
-          <ListItem key={chat.id} disablePadding>
+          <ListItem key={chat.id} disablePadding sx={{ mb: 0.5 }}>
             <ListItemButton
               selected={chat.id === currentChatId}
               onClick={() => {
                 setCurrentChatId(chat.id);
                 setMobileOpen(false);
               }}
+              sx={{
+                borderRadius: 2,
+                '&.Mui-selected': {
+                  bgcolor: 'rgba(79, 195, 247, 0.15)',
+                  '&:hover': {
+                    bgcolor: 'rgba(79, 195, 247, 0.2)',
+                  },
+                },
+                '&:hover': {
+                  bgcolor: 'rgba(255, 255, 255, 0.05)',
+                },
+              }}
             >
+              <ChatIcon sx={{ mr: 1.5, fontSize: 20, color: 'text.secondary' }} />
               <ListItemText
                 primary={chat.title}
                 primaryTypographyProps={{
@@ -295,9 +347,11 @@ export default function Home() {
               overflow: 'auto',
               p: 3,
               pb: 2,
+              display: currentChat?.messages.length === 0 ? 'flex' : 'block',
+              alignItems: currentChat?.messages.length === 0 ? 'center' : 'flex-start',
             }}
           >
-            <Container maxWidth="md">
+            <Container maxWidth="md" sx={{ width: '100%' }}>
               {currentChat?.messages.length === 0 ? (
                 <Box
                   sx={{
@@ -305,42 +359,103 @@ export default function Home() {
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    height: '100%',
                     textAlign: 'center',
+                    gap: 3,
                   }}
                 >
-                  <Typography variant="h3" gutterBottom>
+                  <Box 
+                    sx={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: 2,
+                      mb: 2,
+                    }}
+                  >
+                    <AccountTreeIcon sx={{ fontSize: 64, color: 'primary.main' }} />
+                  </Box>
+                  <Typography 
+                    variant="h2" 
+                    gutterBottom 
+                    sx={{ 
+                      fontWeight: 700,
+                      background: 'linear-gradient(135deg, #4fc3f7 0%, #ba68c8 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      mb: 1,
+                    }}
+                  >
                     Systems AI
                   </Typography>
-                  <Typography variant="body1" color="text.secondary">
+                  <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600 }}>
                     Get expert advice on system architecture and design
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                    Ask me anything about distributed systems, microservices, databases, and more!
-                  </Typography>
+                  <Box sx={{ display: 'flex', gap: 2, mt: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
+                    {[
+                      'Distributed Systems',
+                      'Microservices',
+                      'Database Design',
+                      'API Architecture',
+                    ].map((topic) => (
+                      <Paper
+                        key={topic}
+                        sx={{
+                          px: 2,
+                          py: 1,
+                          bgcolor: 'rgba(79, 195, 247, 0.1)',
+                          border: '1px solid',
+                          borderColor: 'rgba(79, 195, 247, 0.3)',
+                        }}
+                      >
+                        <Typography variant="body2" color="primary.light">
+                          {topic}
+                        </Typography>
+                      </Paper>
+                    ))}
+                  </Box>
                 </Box>
               ) : (
                 <>
                   {currentChat?.messages.map((message, index) => (
                     <Paper
                       key={index}
-                      elevation={1}
+                      elevation={0}
                       sx={{
-                        p: 2,
+                        p: 3,
                         mb: 2,
                         bgcolor:
                           message.role === 'user'
-                            ? 'primary.dark'
+                            ? 'rgba(79, 195, 247, 0.08)'
                             : 'background.paper',
+                        border: '1px solid',
+                        borderColor: 
+                          message.role === 'user'
+                            ? 'rgba(79, 195, 247, 0.2)'
+                            : 'rgba(255, 255, 255, 0.05)',
+                        transition: 'all 0.2s',
+                        '&:hover': {
+                          borderColor: 
+                            message.role === 'user'
+                              ? 'rgba(79, 195, 247, 0.4)'
+                              : 'rgba(255, 255, 255, 0.1)',
+                        },
                       }}
                     >
-                      <Typography
-                        variant="subtitle2"
-                        color="text.secondary"
-                        gutterBottom
-                      >
-                        {message.role === 'user' ? 'You' : 'Systems AI'}
-                      </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
+                        {message.role === 'user' ? (
+                          <PersonIcon sx={{ color: 'primary.main', fontSize: 24 }} />
+                        ) : (
+                          <SmartToyIcon sx={{ color: 'secondary.main', fontSize: 24 }} />
+                        )}
+                        <Typography
+                          variant="subtitle1"
+                          sx={{ 
+                            fontWeight: 600,
+                            color: message.role === 'user' ? 'primary.main' : 'secondary.main',
+                          }}
+                        >
+                          {message.role === 'user' ? 'You' : 'Systems AI'}
+                        </Typography>
+                      </Box>
                       <Box
                         sx={{
                           '& p': { mb: 1 },
@@ -474,14 +589,15 @@ export default function Home() {
 
           <Box
             sx={{
-              borderTop: 1,
-              borderColor: 'divider',
-              p: 2,
-              bgcolor: 'background.paper',
+              borderTop: '1px solid',
+              borderColor: 'rgba(255, 255, 255, 0.08)',
+              p: 3,
+              bgcolor: 'background.default',
+              backdropFilter: 'blur(10px)',
             }}
           >
             <Container maxWidth="md">
-              <Box sx={{ display: 'flex', gap: 1 }}>
+              <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'flex-end' }}>
                 <TextField
                   fullWidth
                   multiline
@@ -492,6 +608,19 @@ export default function Home() {
                   onKeyPress={handleKeyPress}
                   disabled={isLoading}
                   variant="outlined"
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      bgcolor: 'background.paper',
+                      borderRadius: 3,
+                      '&:hover fieldset': {
+                        borderColor: 'primary.main',
+                      },
+                      '&.Mui-focused fieldset': {
+                        borderColor: 'primary.main',
+                        borderWidth: 2,
+                      },
+                    },
+                  }}
                 />
                 <IconButton
                   color="primary"
@@ -500,12 +629,19 @@ export default function Home() {
                   sx={{
                     bgcolor: 'primary.main',
                     color: 'background.paper',
+                    width: 48,
+                    height: 48,
+                    boxShadow: '0 4px 12px rgba(79, 195, 247, 0.4)',
                     '&:hover': {
                       bgcolor: 'primary.dark',
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0 6px 16px rgba(79, 195, 247, 0.5)',
                     },
                     '&.Mui-disabled': {
                       bgcolor: 'action.disabledBackground',
+                      boxShadow: 'none',
                     },
+                    transition: 'all 0.2s',
                   }}
                 >
                   <SendIcon />
