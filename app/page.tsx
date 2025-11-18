@@ -23,6 +23,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AddIcon from '@mui/icons-material/Add';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import ReactMarkdown from 'react-markdown';
 
 const darkTheme = createTheme({
   palette: {
@@ -338,12 +339,58 @@ export default function Home() {
                       >
                         {message.role === 'user' ? 'You' : 'Systems AI'}
                       </Typography>
-                      <Typography
-                        variant="body1"
-                        sx={{ whiteSpace: 'pre-wrap' }}
+                      <Box
+                        sx={{
+                          '& p': { mb: 1 },
+                          '& pre': {
+                            bgcolor: 'background.default',
+                            p: 2,
+                            borderRadius: 1,
+                            overflow: 'auto',
+                            my: 1,
+                          },
+                          '& code': {
+                            bgcolor: 'background.default',
+                            px: 0.5,
+                            py: 0.25,
+                            borderRadius: 0.5,
+                            fontFamily: 'monospace',
+                          },
+                          '& pre code': {
+                            bgcolor: 'transparent',
+                            p: 0,
+                          },
+                          '& ul, & ol': {
+                            pl: 2,
+                            mb: 1,
+                          },
+                          '& li': {
+                            mb: 0.5,
+                          },
+                          '& h1, & h2, & h3, & h4, & h5, & h6': {
+                            mt: 2,
+                            mb: 1,
+                            fontWeight: 600,
+                          },
+                          '& blockquote': {
+                            borderLeft: '4px solid',
+                            borderColor: 'primary.main',
+                            pl: 2,
+                            py: 0.5,
+                            my: 1,
+                            fontStyle: 'italic',
+                          },
+                          '& a': {
+                            color: 'primary.main',
+                            textDecoration: 'none',
+                            '&:hover': {
+                              textDecoration: 'underline',
+                            },
+                          },
+                        }}
                       >
-                        {message.content}
-                      </Typography>
+                        <ReactMarkdown>{message.content}</ReactMarkdown>
+                      </Box>
                     </Paper>
                   ))}
                   {isLoading && (
