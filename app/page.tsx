@@ -24,6 +24,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const darkTheme = createTheme({
   palette: {
@@ -387,9 +388,36 @@ export default function Home() {
                               textDecoration: 'underline',
                             },
                           },
+                          '& table': {
+                            width: '100%',
+                            borderCollapse: 'collapse',
+                            my: 2,
+                            overflow: 'auto',
+                            display: 'block',
+                          },
+                          '& thead': {
+                            bgcolor: 'action.hover',
+                          },
+                          '& th': {
+                            border: '1px solid',
+                            borderColor: 'divider',
+                            p: 1.5,
+                            textAlign: 'left',
+                            fontWeight: 600,
+                          },
+                          '& td': {
+                            border: '1px solid',
+                            borderColor: 'divider',
+                            p: 1.5,
+                          },
+                          '& tr:hover': {
+                            bgcolor: 'action.hover',
+                          },
                         }}
                       >
-                        <ReactMarkdown>{message.content}</ReactMarkdown>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                          {message.content}
+                        </ReactMarkdown>
                       </Box>
                     </Paper>
                   ))}
