@@ -25,6 +25,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import Mermaid from './components/Mermaid';
 
 const darkTheme = createTheme({
   palette: {
@@ -415,7 +416,28 @@ export default function Home() {
                           },
                         }}
                       >
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        <ReactMarkdown
+                          remarkPlugins={[remarkGfm]}
+                          components={{
+                            code(props) {
+                              const { children, className, ...rest } = props;
+                              const match = /language-(\w+)/.exec(className || '');
+                              const language = match ? match[1] : '';
+                              const codeString = String(children).replace(/\n$/, '');
+                              const isInline = !className;
+
+                              if (!isInline && language === 'mermaid') {
+                                return <Mermaid chart={codeString} />;
+                              }
+
+                              return (
+                                <code className={className} {...rest}>
+                                  {children}
+                                </code>
+                              );
+                            },
+                          }}
+                        >
                           {message.content}
                         </ReactMarkdown>
                       </Box>
