@@ -31,9 +31,11 @@ export default function Mermaid({ chart }: MermaidProps) {
 
   useEffect(() => {
     const fixMermaidSyntax = (code: string): string => {
-      // Fix node labels with parentheses, slashes, colons, etc. that aren't quoted
+      let fixedCode = code;
+
+      // Fix 1: Node labels with parentheses, slashes, colons, etc. that aren't quoted
       // Pattern: NodeId[Label with (special) chars] -> NodeId["Label with (special) chars"]
-      return code.replace(
+      fixedCode = fixedCode.replace(
         /(\w+)\[([^\]"]+[\(\)\/\:][^\]"]*)\]/g,
         (match, nodeId, label) => {
           // If label is already quoted, leave it
@@ -44,6 +46,28 @@ export default function Mermaid({ chart }: MermaidProps) {
           return `${nodeId}["${label}"]`;
         }
       );
+
+      // Fix 2: Remove comments from erDiagram attributes
+      // Pattern: type name KEY "comment" -> type name KEY
+      if (fixedCode.includes('erDiagram')) {
+        fixedCode = fixedCode.replace(
+          /^(\s+)(\w+)\s+(\w+)\s+(PK|FK|UK|UNIQUE|NULL)?\s*"[^"]*"(.*)$/gm,
+          (match, indent, type, name, key, rest) => {
+            // Reconstruct without the comment
+            const keyPart = key ? ` ${key}` : '';
+            return `${indent}${type} ${name}${keyPart}${rest}`;
+          }
+        );
+        
+        // Also handle attributes without keys but with comments
+        // Pattern: type name "comment" -> type name
+        fixedCode = fixedCode.replace(
+          /^(\s+)(\w+)\s+(\w+)\s+"[^"]*"$/gm,
+          '$1$2 $3'
+        );
+      }
+
+      return fixedCode;
     };
 
     const renderDiagram = async () => {

@@ -36,6 +36,13 @@ IMPORTANT Mermaid syntax rules:
 - For edge labels, use quotes if they contain special characters: -->|"Sends Data"| B
 - Keep node IDs simple (alphanumeric only): UI, GameCore, Player, etc.
 
+For erDiagram specifically:
+- DO NOT add comments or descriptions after attributes in quotes
+- Correct: string email UNIQUE
+- WRONG: string email UNIQUE "User's email address"
+- Add descriptions as a separate note or in markdown text outside the diagram
+- Attribute syntax: <type> <name> <key> (where key is optional: PK, FK, UK)
+
 Format your responses using Markdown with proper headings, code blocks, tables, and lists for clarity.`,
     });
 
