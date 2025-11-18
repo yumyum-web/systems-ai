@@ -42,6 +42,9 @@ For erDiagram specifically:
 - WRONG: string email UNIQUE "User's email address"
 - Add descriptions as a separate note or in markdown text outside the diagram
 - Attribute syntax: <type> <name> <key> (where key is optional: PK, FK, UK)
+- Entity names: Use PascalCase or camelCase, NOT UPPER_CASE_WITH_UNDERSCORES
+- Correct: User, VoiceModel, ApiKey
+- WRONG: USER, VOICE_MODEL, API_KEY
 
 For gantt charts specifically:
 - Basic task: Task Name, start_date, duration

@@ -60,6 +60,31 @@ export default function Mermaid({ chart }: MermaidProps) {
       // Fix 2: Remove comments from erDiagram attributes
       // Pattern: type name KEY "comment" -> type name KEY
       if (fixedCode.includes('erDiagram')) {
+        // Convert entity names from UPPER_CASE to UpperCase format
+        fixedCode = fixedCode.replace(
+          /^(\s*)([A-Z][A-Z_]+)\s*\{/gm,
+          (match, indent, entityName) => {
+            // Convert VOICE_MODEL -> VoiceModel
+            const formatted = entityName
+              .split('_')
+              .map((word: string) => word.charAt(0) + word.slice(1).toLowerCase())
+              .join('');
+            return `${indent}${formatted} {`;
+          }
+        );
+
+        // Also fix entity names in relationships
+        fixedCode = fixedCode.replace(
+          /^(\s*)([A-Z][A-Z_]+)\s+([\|\}o])/gm,
+          (match, indent, entityName, symbol) => {
+            const formatted = entityName
+              .split('_')
+              .map((word: string) => word.charAt(0) + word.slice(1).toLowerCase())
+              .join('');
+            return `${indent}${formatted} ${symbol}`;
+          }
+        );
+
         fixedCode = fixedCode.replace(
           /^(\s+)(\w+)\s+(\w+)\s+(PK|FK|UK|UNIQUE|NULL)?\s*"[^"]*"(.*)$/gm,
           (match, indent, type, name, key, rest) => {
