@@ -362,12 +362,30 @@ export default function Home() {
                             bgcolor: 'transparent',
                             p: 0,
                           },
-                          '& ul, & ol': {
-                            pl: 2,
+                          '& ul': {
+                            listStyleType: 'disc',
+                            listStylePosition: 'outside',
+                            pl: 4,
                             mb: 1,
+                            ml: 2,
+                          },
+                          '& ol': {
+                            listStyleType: 'decimal',
+                            listStylePosition: 'outside',
+                            pl: 4,
+                            mb: 1,
+                            ml: 2,
                           },
                           '& li': {
                             mb: 0.5,
+                            display: 'list-item',
+                          },
+                          '& ul ul': {
+                            listStyleType: 'circle',
+                            mt: 0.5,
+                          },
+                          '& ul ul ul': {
+                            listStyleType: 'square',
                           },
                           '& h1, & h2, & h3, & h4, & h5, & h6': {
                             mt: 2,
