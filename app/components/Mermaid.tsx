@@ -2,6 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import mermaid from 'mermaid';
+import { IconButton, Dialog, DialogContent, DialogTitle } from '@mui/material';
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface MermaidProps {
   chart: string;
@@ -13,6 +16,7 @@ export default function Mermaid({ chart }: MermaidProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [svg, setSvg] = useState<string>('');
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
     if (!mermaidInitialized) {
@@ -21,8 +25,14 @@ export default function Mermaid({ chart }: MermaidProps) {
         theme: 'dark',
         securityLevel: 'loose',
         flowchart: {
-          useMaxWidth: true,
+          useMaxWidth: false,
           htmlLabels: true,
+        },
+        gantt: {
+          useMaxWidth: false,
+        },
+        sequence: {
+          useMaxWidth: false,
         },
       });
       mermaidInitialized = true;
@@ -150,16 +160,98 @@ export default function Mermaid({ chart }: MermaidProps) {
   }
 
   return (
-    <div
-      ref={ref}
-      dangerouslySetInnerHTML={{ __html: svg }}
-      style={{
-        backgroundColor: 'rgba(0, 0, 0, 0.2)',
-        padding: '16px',
-        borderRadius: '8px',
-        margin: '16px 0',
-        overflow: 'auto',
-      }}
-    />
+    <>
+      <div style={{ position: 'relative' }}>
+        <IconButton
+          onClick={() => setIsFullscreen(true)}
+          size="small"
+          sx={{
+            position: 'absolute',
+            top: 8,
+            right: 8,
+            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+            color: 'white',
+            zIndex: 1,
+            '&:hover': {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            },
+          }}
+          title="Expand diagram"
+        >
+          <FullscreenIcon />
+        </IconButton>
+        <div
+          ref={ref}
+          dangerouslySetInnerHTML={{ __html: svg }}
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.2)',
+            padding: '16px',
+            borderRadius: '8px',
+            margin: '16px 0',
+            overflow: 'auto',
+          }}
+        />
+      </div>
+
+      <Dialog
+        open={isFullscreen}
+        onClose={() => setIsFullscreen(false)}
+        maxWidth={false}
+        fullWidth
+        PaperProps={{
+          sx: {
+            width: '95vw',
+            height: '95vh',
+            maxWidth: 'none',
+            maxHeight: 'none',
+            m: 0,
+          },
+        }}
+      >
+        <DialogTitle
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            pb: 1,
+          }}
+        >
+          Diagram
+          <IconButton
+            onClick={() => setIsFullscreen(false)}
+            size="small"
+            sx={{ color: 'text.secondary' }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            overflow: 'auto',
+            p: 3,
+            '& svg': {
+              width: 'auto !important',
+              height: 'auto !important',
+              maxWidth: '100%',
+              maxHeight: '100%',
+            },
+          }}
+        >
+          <div
+            dangerouslySetInnerHTML={{ __html: svg }}
+            style={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
