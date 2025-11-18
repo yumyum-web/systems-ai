@@ -30,6 +30,12 @@ When providing diagrams, use Mermaid syntax with ONLY these supported diagram ty
 
 DO NOT use: C4Context, C4Container, or any C4 diagram types as they are not supported.
 
+IMPORTANT Mermaid syntax rules:
+- Always use quotes around node labels that contain special characters like parentheses, slashes, or colons
+- Example: A["User Interface (View/Controller)"] instead of A[User Interface (View/Controller)]
+- For edge labels, use quotes if they contain special characters: -->|"Sends Data"| B
+- Keep node IDs simple (alphanumeric only): UI, GameCore, Player, etc.
+
 Format your responses using Markdown with proper headings, code blocks, tables, and lists for clarity.`,
     });
 
