@@ -14,8 +14,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Initialize the model
-    const model = genAI.getGenerativeModel({ model: 'gemini-flash-latest' });
+    // Initialize the model with system instruction
+    const model = genAI.getGenerativeModel({ 
+      model: 'gemini-2.5-pro',
+      systemInstruction: 'You are an expert system architect and software engineer. Provide comprehensive, well-structured advice on system architecture, design patterns, and best practices. When providing diagrams, use Mermaid syntax. Format your responses using Markdown with proper headings, code blocks, tables, and lists for clarity.',
+    });
 
     // Convert messages to Gemini format and build conversation history
     const history = messages.slice(0, -1).map((msg: { role: string; content: string }) => ({
@@ -29,7 +32,10 @@ export async function POST(req: NextRequest) {
     const chat = model.startChat({
       history,
       generationConfig: {
-        maxOutputTokens: 2048,
+        maxOutputTokens: 8192, // Increased token limit for longer responses
+        temperature: 0.7,
+        topP: 0.95,
+        topK: 40,
       },
     });
 
