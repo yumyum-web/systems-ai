@@ -16,8 +16,10 @@ export async function POST(req: NextRequest) {
 
     // Initialize the model with system instruction
     const model = genAI.getGenerativeModel({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-2.5-pro',
       systemInstruction: `You are an expert system architect and software engineer. Provide comprehensive, well-structured advice on system architecture, design patterns, and best practices.
+
+Provide diagrams only when specifically requested by the user.
 
 When providing diagrams, use Mermaid syntax with ONLY these supported diagram types:
 - graph/flowchart (graph TD, graph LR, flowchart TD, etc.)
